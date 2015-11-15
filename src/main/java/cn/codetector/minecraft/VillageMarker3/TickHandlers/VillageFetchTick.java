@@ -26,7 +26,9 @@ public class VillageFetchTick {
         if(mc != null && mc.thePlayer != null){
             //Single Player
             WorldServer worldServer = DimensionManager.getWorld(mc.thePlayer.dimension);
-            LogHelper.logger.info(worldServer.getVillageCollection());
+//            for (Village v : worldServer.getVillageCollection()){
+//
+//            }
         }
     }
 }
