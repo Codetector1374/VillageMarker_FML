@@ -1,14 +1,13 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "VM18",
+  "name": "VillageMarker",
+  "description": "Marks Village range and center",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
-  "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["Codetector"],
+  "credits": "Thanks for KaboPC who came up whith this idea originally",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
