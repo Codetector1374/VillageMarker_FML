@@ -10,5 +10,4 @@ import java.util.List;
  */
 public class CachedVillages {
     public static List vmVillages = new ArrayList();
-
 }

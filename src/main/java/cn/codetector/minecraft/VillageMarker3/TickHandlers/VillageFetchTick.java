@@ -20,15 +20,21 @@ import java.util.List;
  * @author Codetector
  */
 public class VillageFetchTick {
-    @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event){
+    public static void updateVillages(){
         Minecraft mc = Minecraft.getMinecraft();
         if(mc != null && mc.thePlayer != null){
             //Single Player
             WorldServer worldServer = DimensionManager.getWorld(mc.thePlayer.dimension);
-//            for (Village v : worldServer.getVillageCollection()){
-//
-//            }
+            CachedVillages.vmVillages.clear();
+            for (Object v : worldServer.getVillageCollection().getVillageList()){
+                if (v != null && v instanceof Village) {
+                    Village vlg = (Village) v;
+                    VMVillage vmVillage = new VMVillage(vlg.getVillageDoorInfoList(), vlg.getCenter(), vlg.getVillageRadius(), vlg.getNumVillagers());
+                    CachedVillages.vmVillages.add(vmVillage);
+                }else{
+                    LogHelper.logger.error("NULL VILLAGE");
+                }
+            }
         }
     }
 }

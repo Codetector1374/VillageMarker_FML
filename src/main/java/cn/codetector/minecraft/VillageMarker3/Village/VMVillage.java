@@ -12,14 +12,17 @@ import java.util.List;
  * @author Codetector
  */
 public class VMVillage {
-    public List<BlockPos> doors;
+    public List doors = new ArrayList();
     public BlockPos villageCenter;
     public int radius;
-    public VMVillage(List drs, BlockPos center, int radius){
-         for (Object vds : drs){
-             doors.add(((VillageDoorInfo)vds).getDoorBlockPos());
-         }
+    public int villagerCount;
+
+    public VMVillage(List drs, BlockPos center, int radius, int villagerCount) {
+        for (Object vds : drs) {
+            doors.add(((VillageDoorInfo) vds).getDoorBlockPos());
+        }
         this.villageCenter = center;
         this.radius = radius;
+        this.villagerCount = villagerCount;
     }
 }
