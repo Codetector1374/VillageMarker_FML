@@ -4,10 +4,10 @@ import cn.codetector.minecraft.VillageMarker3.Village.CachedVillages;
 import cn.codetector.minecraft.VillageMarker3.Village.VMVillage;
 import cn.codetector.minecraft.VillageMarker3.VillageMarker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -25,6 +25,10 @@ import static org.lwjgl.opengl.GL11.*;
  * @author Codetector
  */
 public class RenderTick {
+    EntityPlayer p;
+    double offsetX;
+    double offsetY;
+    double offsetZ;
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Text event){
         if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
@@ -33,19 +37,19 @@ public class RenderTick {
             event.right.add("\u00A7eVillageMarker Version:" + VillageMarker.VERSION);
             Village nearestVillage = DimensionManager.getWorld(Minecraft.getMinecraft().thePlayer.dimension).getVillageCollection().getNearestVillage(Minecraft.getMinecraft().thePlayer.getPosition(),5000);
             event.right.add("\u00A7fNearest Village Villager Count: " + (nearestVillage == null ? "N/A" : nearestVillage.getNumVillagers()));
+            event.right.add("Nearest Village Door Count: "+nearestVillage.getNumVillageDoors());
         }
     }
 
     @SubscribeEvent
     public void onRenderGameContent(RenderWorldLastEvent event){
         VillageFetchTick.updateVillages();
-        double offsetX = Minecraft.getMinecraft().thePlayer.posX;
-        double offsetY = Minecraft.getMinecraft().thePlayer.posY;
-        double offsetZ = Minecraft.getMinecraft().thePlayer.posZ;
-
-        GlStateManager.pushMatrix();
-
-//        GlStateManager.translate(-offsetX,-offsetY,-offsetZ);
+        if (this.p == null || this.p != Minecraft.getMinecraft().thePlayer){
+            p = Minecraft.getMinecraft().thePlayer;
+        }
+        offsetX = p.posX;
+        offsetY = p.posY;
+        offsetZ = p.posZ;
 
         Tessellator t = Tessellator.getInstance();
         WorldRenderer wr = t.getWorldRenderer();
@@ -57,6 +61,8 @@ public class RenderTick {
                 VMVillage v = (VMVillage)irv;
                 glEnable(GL_BLEND);
                 glDisable(GL_TEXTURE_2D);
+
+                wr.setTranslation(-offsetX,-offsetY,-offsetZ);
 
                 glBlendFunc(1, 32769);
                 setColor(c%6);
@@ -72,7 +78,7 @@ public class RenderTick {
                 //Door Lines
                 for (Iterator i$ = v.doors.iterator(); i$.hasNext();){
                     Object Dobj = i$.next();
-                    glLineWidth(2);
+                    glLineWidth(4);
                     if (Dobj instanceof BlockPos){
                         wr.startDrawing(1);
                         wr.addVertex(((BlockPos) Dobj).getX(),((BlockPos) Dobj).getY(),((BlockPos) Dobj).getZ());
@@ -91,7 +97,6 @@ public class RenderTick {
                 wr.setTranslation(0,0,0);
             }
         }
-        GlStateManager.popMatrix();
 
     }
 
