@@ -16,6 +16,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Iterator;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -37,7 +38,8 @@ public class RenderTick {
             event.right.add("\u00A7eVillageMarker Version:" + VillageMarker.VERSION);
             Village nearestVillage = DimensionManager.getWorld(Minecraft.getMinecraft().thePlayer.dimension).getVillageCollection().getNearestVillage(Minecraft.getMinecraft().thePlayer.getPosition(),5000);
             event.right.add("\u00A7fNearest Village Villager Count: " + (nearestVillage == null ? "N/A" : nearestVillage.getNumVillagers()));
-            event.right.add("Nearest Village Door Count: "+nearestVillage.getNumVillageDoors());
+            event.right.add("Nearest Village Door Count: "+(nearestVillage == null ? "N/A" : nearestVillage.getNumVillageDoors()));
+            event.right.add("Nearest Village Center: "+(nearestVillage == null ? "N/A" : nearestVillage.getCenter().getX()+","+nearestVillage.getCenter().getY()+","+nearestVillage.getCenter().getZ()+"(XYZ)"));
         }
     }
 
@@ -54,8 +56,8 @@ public class RenderTick {
         Tessellator t = Tessellator.getInstance();
         WorldRenderer wr = t.getWorldRenderer();
         int c = 0;
-
-        for (Iterator ir$ = CachedVillages.vmVillages.iterator(); ir$.hasNext();){
+        List vmVillages = CachedVillages.getSharedInstance().getVillageListForDimension(Minecraft.getMinecraft().thePlayer.dimension);
+        for (Iterator ir$ = vmVillages.iterator(); ir$.hasNext();){
             Object irv = ir$.next();
             if (irv instanceof VMVillage){
                 VMVillage v = (VMVillage)irv;
